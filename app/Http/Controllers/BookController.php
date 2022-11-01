@@ -16,7 +16,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $data = Book::query()->paginate(20);
+        $data = Book::query()->paginate(7);
 
         return Inertia::render('books', ['data' => $data]);
     }

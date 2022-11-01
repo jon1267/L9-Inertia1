@@ -48,6 +48,8 @@
                         </tbody>
                     </table>
 
+                    <pagination :links="data.links"></pagination>
+
                 </div>
             </div>
         </div>
@@ -55,8 +57,15 @@
 </template>
 
 <script>
+import AppLayout from './../Layouts/AppLayout.vue';
+import Pagination from './../Components/pagination.vue';
+
 export default {
     props: ['data'],
+    components: {
+        AppLayout,
+        Pagination,
+    },
 }
 </script>
 
