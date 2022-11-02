@@ -17,7 +17,12 @@
                         </div>
                     </div>
 
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create New Book</button>
+                    <button
+                        @click="openForm()"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3"
+                    >
+                        Create New Book
+                    </button>
 
                     <!-- table -->
                     <table class="table-fixed w-full posts-table">
@@ -37,10 +42,13 @@
                             <td class="px-4 py-2 border">{{ item.author }}</td>
                             <td class="px-4 py-2 border"><!-- image --></td>
                             <td class="border px-4 py-2 text-center">
-                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded " title="Edit data">
+                                <button
+                                    @click="openForm(item)"  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded " title="Edit data">
                                     <i class="fas fa-pen"></i>
                                 </button>
-                                <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 ml-2 rounded " title="Delete data">
+                                <button
+                                    @click="deleteItem(item)"
+                                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 ml-2 rounded " title="Delete data">
                                     <i class="fas fa-trash" ></i>
                                 </button>
                             </td>
@@ -49,6 +57,13 @@
                     </table>
 
                     <pagination :links="data.links"></pagination>
+                    <book-form
+                        :isOpen="isFormOpen"
+                        :isEdit="isFormEdit"
+                        :form="formObject"
+                        @formsave="saveItem"
+                        @formclose="closeModal()"
+                    ></book-form>
 
                 </div>
             </div>
@@ -57,14 +72,43 @@
 </template>
 
 <script>
+const defaultFormObject = {
+    title: null, author: null, image: null
+};
+
 import AppLayout from './../Layouts/AppLayout.vue';
 import Pagination from './../Components/pagination.vue';
+import BookForm from './../Components/Book/form.vue';
 
 export default {
     props: ['data'],
     components: {
         AppLayout,
         Pagination,
+        BookForm,
+    },
+    data() {
+        return {
+            isFormOpen: false,
+            isFormEdit: false,
+            formObject: defaultFormObject,
+        }
+    },
+    methods: {
+        saveItem(item) {
+            console.log(item);
+        },
+        closeModal() {
+            this.isFormOpen = false;
+        },
+        openForm(item) {
+            this.isFormOpen = true;
+            this.isFormEdit = !!item;
+            this.formObject = item ? item : defaultFormObject;
+        },
+        deleteItem(item) {
+            console.log('delete' + item.id);
+        },
     },
 }
 </script>

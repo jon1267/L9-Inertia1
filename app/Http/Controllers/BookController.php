@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Book;
 use Inertia\Inertia;
 
@@ -22,16 +23,6 @@ class BookController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreBookRequest  $request
@@ -39,29 +30,14 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        //
-    }
+        Validator::make($request->all(), [
+            'title'  => 'required',
+            'author' => 'required',
+        ])->validate();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Book  $book
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Book $book)
-    {
-        //
-    }
+        Book::create($request->all());
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Book  $book
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Book $book)
-    {
-        //
+        return redirect()->back()->with('message', 'Book was created' );
     }
 
     /**
@@ -73,7 +49,14 @@ class BookController extends Controller
      */
     public function update(UpdateBookRequest $request, Book $book)
     {
-        //
+        Validator::make($request->all(), [
+            'title'  => 'required',
+            'author' => 'required',
+        ])->validate();
+
+        $book->update($request->all());
+
+        return redirect()->back()->with('message', 'Book was updated' );
     }
 
     /**
@@ -84,6 +67,8 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $book->delete();
+
+        return redirect()->back()->with('message', 'Book was deleted' );
     }
 }
