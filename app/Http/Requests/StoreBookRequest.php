@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreBookRequest extends FormRequest
 {
@@ -13,7 +14,8 @@ class StoreBookRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        //return false;//this default. //return true - this was earlier
+        return Auth::hasUser();
     }
 
     /**

@@ -96,7 +96,20 @@ export default {
     },
     methods: {
         saveItem(item) {
-            console.log(item);
+            //console.log(item);
+            let url = '/books';
+            if (item.id) {
+                url = '/books/'+item.id;
+                item._method = 'PUT';
+            }
+            this.$inertia.post(url, item, {
+                onError: (resp) => {
+                    console.log(resp);
+                },
+                onSuccess: () => {
+                    this.closeModal();
+                }
+            });
         },
         closeModal() {
             this.isFormOpen = false;
@@ -105,9 +118,15 @@ export default {
             this.isFormOpen = true;
             this.isFormEdit = !!item;
             this.formObject = item ? item : defaultFormObject;
+            this.$page.props.errors = {}; //clear validation err from last editions
         },
         deleteItem(item) {
-            console.log('delete' + item.id);
+            //console.log('delete' + item.id);
+            if (window.confirm('Are you sure?')) {
+                this.$inertia.post('/books/'+item.id, {
+                    _method: 'DELETE'
+                });
+            }
         },
     },
 }
