@@ -40,7 +40,9 @@
                             <td class="px-4 py-2 border">{{ item.id }}</td>
                             <td class="px-4 py-2 border">{{ item.title }}</td>
                             <td class="px-4 py-2 border">{{ item.author }}</td>
-                            <td class="px-4 py-2 border"><!-- image --></td>
+                            <td class="px-4 py-2 border">
+                                <img v-if="item.image" :src="image_path(item.image)" alt="Image">
+                            </td>
                             <td class="border px-4 py-2 text-center">
                                 <button
                                     @click="openForm(item)"  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded " title="Edit data">
@@ -95,6 +97,9 @@ export default {
         }
     },
     methods: {
+        image_path(image) {
+            return '/' + image;
+        },
         saveItem(item) {
             //console.log(item);
             let url = '/books';

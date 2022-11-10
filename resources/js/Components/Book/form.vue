@@ -37,8 +37,28 @@
                             <div class="mb-4">
                                 <label for="formBookImage"
                                        class="block text-gray-700 text-sm font-bold mb-2">Image:</label>
-                                <file-pond>
-                                    
+                                <file-pond
+                                    name="imageFilepond"
+                                    ref="pond"
+                                    :allow-multiple="false"
+                                    accepted-file-types="image/png, image/jpeg"
+                                    :server="{
+                                        url: '',
+                                        timeout: 7000,
+                                        process: {
+                                            url: '/upload-books',
+                                            method: 'POST',
+                                            headers: {
+                                                'X-CSRF-TOKEN': $page.props.csrf_token
+                                            },
+                                            withCredentials: false,
+                                            onload: handleFilePondLoad,
+                                            onerror: () => {}
+                                        }
+                                    }"
+                                    :file="myFiles"
+                                    @init="handleFilePondInit"
+                                >
                                 </file-pond>
                             </div>
                         </div>
@@ -116,8 +136,14 @@ export  default {
         }
     },
     methods: {
-        handleFilePondInit() {},
-        handleFilePondLoad() {},
+        handleFilePondInit()
+        {
+
+        },
+        handleFilePondLoad(response)
+        {
+            this.form.image = response;
+        },
     },
 }
 </script>

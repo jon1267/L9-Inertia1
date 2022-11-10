@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateBookRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Book;
 use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Request;
 
 class BookController extends Controller
 {
@@ -70,5 +71,13 @@ class BookController extends Controller
         $book->delete();
 
         return redirect()->back()->with('message', 'Book was deleted' );
+    }
+
+    public function upload(Request $request)
+    {
+        if ($request->hasFile('imageFilepond')) {
+            return $request->file('imageFilepond')->store('uploads/books', 'public');
+        }
+        return '';
     }
 }
