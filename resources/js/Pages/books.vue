@@ -41,7 +41,7 @@
                             <td class="px-4 py-2 border">{{ item.title }}</td>
                             <td class="px-4 py-2 border">{{ item.author }}</td>
                             <td class="px-4 py-2 border">
-                                <img v-if="item.image" :src="image_path(item.image)" alt="Image">
+                                <img v-if="item.image" :src="image_path(item.image)" alt="Image" style="height: 80px; width: 70px; border-radius:50%;">
                             </td>
                             <td class="border px-4 py-2 text-center">
                                 <button
@@ -98,7 +98,7 @@ export default {
     },
     methods: {
         image_path(image) {
-            return '/' + image;
+            return '/storage/' + image; //return '/' + image; //так не выводит картинку
         },
         saveItem(item) {
             //console.log(item);
@@ -122,7 +122,8 @@ export default {
         openForm(item) {
             this.isFormOpen = true;
             this.isFormEdit = !!item;
-            this.formObject = item ? item : defaultFormObject;
+            //this.formObject = item ? item : defaultFormObject;
+            this.formObject = item ? Object.assign({}, item) : defaultFormObject;
             this.$page.props.errors = {}; //clear validation err from last editions
         },
         deleteItem(item) {

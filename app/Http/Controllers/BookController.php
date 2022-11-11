@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Book;
-use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+use App\Models\Book;
 
 class BookController extends Controller
 {
@@ -38,6 +39,8 @@ class BookController extends Controller
 
         Book::create($request->all());
 
+        //$this->processImage($request);
+
         return redirect()->back()->with('message', 'Book was created' );
     }
 
@@ -56,6 +59,8 @@ class BookController extends Controller
         ])->validate();
 
         $book->update($request->all());
+
+        $this->processImage($request);
 
         return redirect()->back()->with('message', 'Book was updated' );
     }
@@ -79,5 +84,24 @@ class BookController extends Controller
             return $request->file('imageFilepond')->store('uploads/books', 'public');
         }
         return '';
+    }
+
+    protected function processImage(Request $request)
+    {
+        // here intent delete old picture on update. This generate error for Win (OSPanel+Win)
+        // Need correct code: if picture update - delete old picture, than save new ...
+        if ($image = $request->get('image')) {
+            $path = storage_path('app/public/'.$image);
+            if (file_exists($path)) {
+                try {
+                    //copy($path, public_path('storage/uploads/books')); //dd($path, $image, public_path($image));
+                    copy($path, public_path($image)); //dd($path, $image, public_path($image));
+                    unlink($path);
+                } catch (\Exception $e) {
+                    Log::error($e->getMessage());
+                }
+
+            }
+        }
     }
 }
